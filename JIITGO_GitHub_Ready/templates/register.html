@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="auth-card">
+
+    <div class="eyebrow">
+        JIIT COMMUNITY ONLY
+    </div>
+
+    <h1>
+        Create account<span class="accent">.</span>
+    </h1>
+
+
+    <form method="post" class="panel">
+
+        <label>
+
+            Full name
+
+            <input name="name"
+                   required
+                   placeholder="Your name">
+
+        </label>
+
+
+        <label>
+
+            JIIT email
+
+            <input type="email"
+                   name="email"
+                   required
+                   placeholder="you@mail.jiit.ac.in">
+
+        </label>
+
+
+        <label>
+
+            Password
+
+            <input type="password"
+                   name="password"
+                   minlength="8"
+                   required
+                   placeholder="At least 8 characters">
+
+        </label>
+
+
+        <button class="primary full">
+
+            Join JIITGO →
+
+        </button>
+
+
+        <p class="muted tiny">
+
+            Prototype domain check only.
+            Production should verify mailbox
+            ownership with email OTP.
+
+        </p>
+
+    </form>
+
+</div>
+
+{% endblock %}

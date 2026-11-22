@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="page-head">
+
+    <p class="eyebrow">NEW LISTING</p>
+
+    <h1>Create a ride</h1>
+
+    <p class="muted">
+        Post your booked cab and let fellow JIIT students join.
+    </p>
+
+</div>
+
+
+<form class="panel form-grid" method="post">
+
+    <label>
+        Pickup / From
+
+        <input
+            name="source"
+            required
+            placeholder="JIIT Sector 128"
+        >
+    </label>
+
+
+    <label>
+        Destination
+
+        <input
+            name="destination"
+            required
+            placeholder="Sector 62 / Metro"
+        >
+    </label>
+
+
+    <label>
+        Travel date
+
+        <input
+            type="date"
+            id="ride-date"
+            name="ride_date"
+            required
+        >
+    </label>
+
+
+    <label>
+        Departure time
+
+        <input
+            type="time"
+            id="ride-time"
+            name="ride_time"
+            required
+        >
+    </label>
+
+
+    <label>
+        Vehicle type
+
+        <select name="vehicle" id="vehicle" required>
+            <option value="">Select vehicle type</option>
+            <option value="Auto">Auto</option>
+            <option value="Standard Cab">Standard Cab</option>
+            <option value="MPV">MPV</option>
+        </select>
+    </label>
+
+
+    <label>
+        Cab capacity
+
+        <select name="capacity" required>
+
+            <option value="">Select seats</option>
+            <option value="3">3 seats (including host)</option>
+            <option value="4">4 seats (including host)</option>
+            <option value="6">6 seats (including host)</option>
+
+        </select>
+
+        <small>Host counts as one seat.</small>
+    </label>
+
+
+    <label>
+        Total cab fare (₹)
+
+        <input
+            type="number"
+            name="total_fare"
+            min="0"
+            step="1"
+            value="0"
+            required
+        >
+    </label>
+
+
+    <label>
+        Car number
+        <span class="optional">optional</span>
+
+        <input
+            name="car_number"
+            placeholder="DL 8C XX 1234"
+        >
+    </label>
+
+
+    <label class="wide">
+        Ride OTP
+        <span class="optional">
+            optional — add later if needed
+        </span>
+
+        <input
+            name="ride_otp"
+            placeholder="Cab OTP"
+        >
+    </label>
+
+
+    <div class="wide form-actions">
+
+        <button class="btn" type="submit">
+            Publish ride →
+        </button>
+
+        <a class="btn ghost"
+           href="{{ url_for('index') }}">
+            Cancel
+        </a>
+
+    </div>
+
+</form>
+
+{% endblock %}

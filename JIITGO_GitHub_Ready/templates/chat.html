@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<a
+    class="back"
+    href="{{ url_for('ride_detail', ride_id=ride.id) }}"
+>
+    ← Back to ride
+</a>
+
+
+<div class="page-head">
+
+    <p class="eyebrow">
+        PRIVATE RIDE CHAT · #{{ ride.id }}
+    </p>
+
+    <h1>
+        {{ ride.source }} → {{ ride.destination }}
+    </h1>
+
+    <p class="muted">
+        Only the host and accepted ride members can access
+        this chat. Messages older than 30 days are removed
+        when chat is opened.
+    </p>
+
+</div>
+
+
+<div class="panel chat-panel">
+
+    <div id="messages" class="messages">
+
+        {% for msg in messages %}
+
+            <div class="message {{ 'mine' if msg.user_id == current_user.id else '' }}">
+
+                <b>{{ msg.user.name }}</b>
+
+                <p>{{ msg.message }}</p>
+
+                <small>
+                    {{ msg.created_at.strftime('%d %b, %H:%M') }}
+                </small>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+
+    <form id="chat-form" class="chat-form">
+
+        <input
+            id="chat-input"
+            maxlength="1500"
+            placeholder="Message ride members..."
+            autocomplete="off"
+            required
+        >
+
+        <button class="btn">
+            Send
+        </button>
+
+    </form>
+
+</div>
+
+
+<script>
+    window.JIITGO_CHAT = {
+        rideId: {{ ride.id }},
+        userId: {{ current_user.id }}
+    };
+</script>
+
+<script src="{{ url_for('static', filename='JS/chat.js') }}"></script>
+
+{% endblock %}

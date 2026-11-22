@@ -1,0 +1,342 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<a class="back" href="{{ url_for('index') }}">
+    ← All rides
+</a>
+
+
+<div class="section-head">
+
+    <div>
+
+        <p class="eyebrow">
+            RIDE #{{ ride.id }}
+        </p>
+
+        <h1>
+            {{ ride.source }}
+            <span class="route-arrow">→</span>
+            {{ ride.destination }}
+        </h1>
+
+        <p class="muted">
+            {{ ride.ride_date }}
+            · {{ ride.ride_time }}
+            · {{ ride.vehicle }}
+        </p>
+
+    </div>
+
+    <span class="tag">
+        {{ ride.status|upper }}
+    </span>
+
+</div>
+
+
+<div class="detail-layout">
+
+    <!-- RIDE INFORMATION -->
+
+    <section class="panel">
+
+        <h2>Ride details</h2>
+
+        <div class="stats">
+
+            <div>
+                <small>SEATS AVAILABLE</small>
+                <strong>{{ left }}</strong>
+            </div>
+
+            <div>
+                <small>TOTAL FARE</small>
+                <strong>
+                    ₹{{ "%.0f"|format(ride.total_fare) }}
+                </strong>
+            </div>
+
+            <div>
+                <small>YOUR SHARE</small>
+                <strong>
+                    ₹{{ "%.2f"|format(share) }}
+                </strong>
+            </div>
+
+        </div>
+
+
+        <p>
+            Host:
+            <b>{{ ride.host.name }}</b>
+        </p>
+
+
+        {% if member or host %}
+
+            <div class="private-info">
+
+                <h3>Cab details (members only)</h3>
+
+                <p>
+                    Car number:
+                    <b>
+                        {{ ride.car_number or 'Not added yet' }}
+                    </b>
+                </p>
+
+                <p>
+                    Ride OTP:
+                    <b>
+                        {{ ride.ride_otp or 'Not added yet' }}
+                    </b>
+                </p>
+
+            </div>
+
+        {% endif %}
+
+
+        {% if host %}
+
+            <form
+                method="post"
+                action="{{ url_for('update_ride_details', ride_id=ride.id) }}"
+                class="stack"
+            >
+
+                <h3>Update car number / OTP</h3>
+
+                <label>
+                    Car number
+
+                    <input
+                        name="car_number"
+                        value="{{ ride.car_number or '' }}"
+                        placeholder="DL..."
+                    >
+                </label>
+
+                <label>
+                    Ride OTP
+
+                    <input
+                        name="ride_otp"
+                        value="{{ ride.ride_otp or '' }}"
+                        placeholder="Cab OTP"
+                    >
+                </label>
+
+                <button class="btn" type="submit">
+                    Save cab details
+                </button>
+
+            </form>
+
+
+        {% elif not member and left > 0 and ride.status == 'open' %}
+
+            <form
+                method="post"
+                action="{{ url_for('request_join', ride_id=ride.id) }}"
+            >
+
+                <button class="btn" type="submit">
+                    Request to join
+                </button>
+
+            </form>
+
+        {% elif not member %}
+
+            <p class="muted">
+                This ride is full or closed.
+            </p>
+
+        {% endif %}
+
+
+        {% if member or host %}
+
+            <a
+                class="btn chat-btn"
+                href="{{ url_for('ride_chat', ride_id=ride.id) }}"
+            >
+                Open private ride chat →
+            </a>
+
+        {% endif %}
+
+    </section>
+
+
+    <!-- PASSENGERS AND HOST CONTROLS -->
+
+    <section class="panel">
+
+        <h2>
+            Passengers
+
+            <span class="tag">
+                {{ members|length }}/{{ ride.capacity }}
+            </span>
+        </h2>
+
+
+        {% for m in members %}
+
+            <div class="member-row">
+
+                <div class="avatar">
+                    {{ m.user.name[:1]|upper }}
+                </div>
+
+                <div class="member-name">
+
+                    <b>{{ m.user.name }}</b>
+
+                    <small>{{ m.role|title }}</small>
+
+                </div>
+
+
+                {% if host and m.role != 'host' %}
+
+                    <form
+                        method="post"
+                        action="{{ url_for('mark_payment',
+                                           ride_id=ride.id,
+                                           member_id=m.id) }}"
+                    >
+
+                        <button
+                            class="pay-btn {{ 'paid' if m.payment_received else '' }}"
+                        >
+
+                            {{ 'Paid ✓' if m.payment_received else 'Mark paid' }}
+
+                        </button>
+
+                    </form>
+
+                {% endif %}
+
+            </div>
+
+        {% endfor %}
+
+
+        {% if host %}
+
+            <hr>
+
+            <h3>Pending join requests</h3>
+
+
+            {% if requests_list %}
+
+                {% for req in requests_list %}
+
+                    <div class="member-row">
+
+                        <div class="member-name">
+
+                            <b>{{ req.user.name }}</b>
+
+                            <small>{{ req.user.email }}</small>
+
+                        </div>
+
+
+                        <div class="inline-actions">
+
+                            <form
+                                method="post"
+                                action="{{ url_for('manage_request',
+                                                   req_id=req.id,
+                                                   action='accept') }}"
+                            >
+
+                                <button class="btn small">
+                                    Accept
+                                </button>
+
+                            </form>
+
+
+                            <form
+                                method="post"
+                                action="{{ url_for('manage_request',
+                                                   req_id=req.id,
+                                                   action='reject') }}"
+                            >
+
+                                <button class="btn small ghost">
+                                    Reject
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <p class="muted">
+                    No pending requests.
+                </p>
+
+            {% endif %}
+
+
+            <hr>
+
+            <h3>Invite a friend</h3>
+
+
+            <form
+                method="post"
+                action="{{ url_for('invite_friend', ride_id=ride.id) }}"
+                class="stack"
+            >
+
+                <select name="friend_id" required>
+
+                    <option value="">
+                        Choose student
+                    </option>
+
+                    {% for friend in friends if friend.id != current_user.id %}
+
+                        <option
+                            value="{{ friend.id }}"
+                            {% if friend.id in invited_ids %}disabled{% endif %}
+                        >
+
+                            {{ friend.name }} · {{ friend.email }}
+
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+
+                <button class="btn" type="submit">
+                    Send invitation
+                </button>
+
+            </form>
+
+        {% endif %}
+
+    </section>
+
+</div>
+
+{% endblock %}

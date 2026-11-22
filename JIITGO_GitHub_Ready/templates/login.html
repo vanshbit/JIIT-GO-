@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="auth-card">
+
+    <div class="eyebrow">
+        WELCOME BACK
+    </div>
+
+    <h1>
+        Sign in<span class="accent">.</span>
+    </h1>
+
+    <form method="post" class="panel">
+
+        <label>
+
+            JIIT email
+
+            <input type="email"
+                   name="email"
+                   placeholder="you@mail.jiit.ac.in"
+                   required>
+
+        </label>
+
+
+        <label>
+
+            Password
+
+            <input type="password"
+                   name="password"
+                   required>
+
+        </label>
+
+
+        <button class="primary full">
+            Sign in
+        </button>
+
+
+        <p class="muted">
+
+            New here?
+
+            <a href="{{ url_for('register') }}">
+                Create an account
+            </a>
+
+        </p>
+
+    </form>
+
+</div>
+
+{% endblock %}

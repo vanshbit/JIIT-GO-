@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<section class="hero">
+
+    <div>
+
+        <p class="eyebrow">
+            JIIT STUDENT RIDE POOLING
+        </p>
+
+        <h1>
+            Same route.<br>
+            <span>Shared ride.</span>
+        </h1>
+
+        <p class="muted">
+            Find students travelling your way,
+            split the fare, and coordinate privately.
+        </p>
+
+        {% if current_user %}
+
+            <a class="btn"
+               href="{{ url_for('create_ride') }}">
+                + Create a ride
+            </a>
+
+        {% else %}
+
+            <a class="btn"
+               href="{{ url_for('register') }}">
+                Get started
+            </a>
+
+        {% endif %}
+
+    </div>
+
+    <div class="hero-art">
+        J<span>G</span>
+        <small>128 ↔ 62</small>
+    </div>
+
+</section>
+
+
+<div class="section-head">
+
+    <div>
+        <p class="eyebrow">LIVE BOARD</p>
+        <h2>Available rides</h2>
+    </div>
+
+    <span class="tag">
+        {{ ride_data|length }} rides listed
+    </span>
+
+</div>
+
+
+{% if ride_data %}
+
+<div class="ride-grid">
+
+    {% for item in ride_data %}
+
+        {% set ride = item.ride %}
+
+        <article class="ride-card">
+
+            <div class="card-top">
+
+                <span class="tag">
+                    {{ ride.vehicle }}
+                </span>
+
+                <span class="status">
+                    {{ ride.status|upper }}
+                </span>
+
+            </div>
+
+
+            <div class="route">
+
+                <div>
+                    <small>FROM</small>
+                    <b>{{ ride.source }}</b>
+                </div>
+
+                <span class="arrow">→</span>
+
+                <div>
+                    <small>TO</small>
+                    <b>{{ ride.destination }}</b>
+                </div>
+
+            </div>
+
+
+            <div class="details">
+
+                <span>▣ {{ ride.ride_date }}</span>
+                <span>◷ {{ ride.ride_time }}</span>
+
+            </div>
+
+
+            <div class="card-bottom">
+
+                <div>
+                    <b>{{ item.left }}</b> seats left
+
+                    <small>
+                        · ₹{{ "%.0f"|format(ride.total_fare) }} total
+                    </small>
+                </div>
+
+                <a class="btn small"
+                   href="{{ url_for('ride_detail', ride_id=ride.id) }}">
+                    View ride
+                </a>
+
+            </div>
+
+
+            <p class="hostline">
+                Hosted by {{ ride.host.name }}
+            </p>
+
+        </article>
+
+    {% endfor %}
+
+</div>
+
+{% else %}
+
+<div class="empty">
+
+    <div class="empty-icon">↗</div>
+
+    <h3>No rides posted yet</h3>
+
+    <p>
+        Be the first to create a ride for your route.
+    </p>
+
+    {% if current_user %}
+
+        <a class="btn"
+           href="{{ url_for('create_ride') }}">
+            Create first ride
+        </a>
+
+    {% endif %}
+
+</div>
+
+{% endif %}
+
+{% endblock %}

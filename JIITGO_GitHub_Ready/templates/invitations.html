@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="page-head">
+
+    <p class="eyebrow">RIDE INVITES</p>
+
+    <h1>Invitations</h1>
+
+</div>
+
+
+<section class="panel">
+
+    <h2>Received</h2>
+
+    {% for inv in incoming %}
+
+        <div class="invite-row">
+
+            <div>
+
+                <b>{{ inv.sender.name }}</b>
+                invited you to
+
+                <b>
+                    {{ inv.ride.source }}
+                    → {{ inv.ride.destination }}
+                </b>
+
+                <small>
+                    {{ inv.ride.ride_date }}
+                    · {{ inv.ride.ride_time }}
+                    · {{ inv.ride.vehicle }}
+                </small>
+
+            </div>
+
+
+            <div class="inline-actions">
+
+                <form
+                    method="post"
+                    action="{{ url_for('handle_invitation',
+                                       inv_id=inv.id,
+                                       action='accept') }}"
+                >
+
+                    <button class="btn small">
+                        Accept
+                    </button>
+
+                </form>
+
+
+                <form
+                    method="post"
+                    action="{{ url_for('handle_invitation',
+                                       inv_id=inv.id,
+                                       action='decline') }}"
+                >
+
+                    <button class="btn small ghost">
+                        Decline
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    {% else %}
+
+        <p class="muted">
+            No pending invitations.
+        </p>
+
+    {% endfor %}
+
+</section>
+
+
+<section class="panel">
+
+    <h2>Sent invitations</h2>
+
+    {% for inv in outgoing %}
+
+        <div class="invite-row">
+
+            <div>
+
+                <b>{{ inv.recipient.name }}</b>
+
+                <small>
+                    {{ inv.ride.source }}
+                    → {{ inv.ride.destination }}
+                    · {{ inv.status|title }}
+                </small>
+
+            </div>
+
+            <span class="tag">
+                {{ inv.status }}
+            </span>
+
+        </div>
+
+    {% else %}
+
+        <p class="muted">
+            No sent invitations.
+        </p>
+
+    {% endfor %}
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,122 @@
+<article class="ride-card">
+
+    <div class="card-top">
+
+        <span class="vehicle-icon">
+
+            {% if ride.capacity == 3 %}
+                🛺
+            {% elif ride.capacity == 4 %}
+                🚕
+            {% else %}
+                🚙
+            {% endif %}
+
+        </span>
+
+        <span class="status {{ ride.status }}">
+            {{ ride.status }}
+        </span>
+
+    </div>
+
+
+    <div class="route">
+
+        <div>
+
+            <small>FROM</small>
+
+            <b>
+                {{ ride.source }}
+            </b>
+
+        </div>
+
+        <span class="route-line">
+            →
+        </span>
+
+        <div>
+
+            <small>TO</small>
+
+            <b>
+                {{ ride.destination }}
+            </b>
+
+        </div>
+
+    </div>
+
+
+    <div class="ride-meta">
+
+        <span>
+            ◷
+            {{ ride.departure.strftime(
+                '%d %b · %I:%M %p'
+            ) }}
+        </span>
+
+        <span>
+            {{ available_seats(ride) }}
+            seats left
+        </span>
+
+    </div>
+
+
+    <!-- SEAT CIRCLES -->
+
+    <div class="seat-row">
+
+        {% for i in range(ride.capacity) %}
+
+            <span class="seat-dot
+                {% if i < confirmed_seats(ride)|length %}
+                    occupied
+                {% endif %}">
+
+                {% if i < confirmed_seats(ride)|length %}
+
+                    {{ confirmed_seats(ride)[i].user.name[:1]|upper }}
+
+                {% else %}
+
+                    ＋
+
+                {% endif %}
+
+            </span>
+
+        {% endfor %}
+
+    </div>
+
+
+    <div class="card-bottom">
+
+        <span class="fare">
+
+            ₹{{ '%.0f'|format(ride.total_fare) }}
+
+            <small>
+                total fare
+            </small>
+
+        </span>
+
+        <a class="outline-btn"
+           href="{{ url_for(
+               'ride_detail',
+               ride_id=ride.id
+           ) }}">
+
+            View ride ↗
+
+        </a>
+
+    </div>
+
+</article>

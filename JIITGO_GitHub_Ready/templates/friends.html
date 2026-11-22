@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="page-head">
+
+    <p class="eyebrow">CAMPUS NETWORK</p>
+
+    <h1>Find friends</h1>
+
+    <p class="muted">
+        Search by student name or JIIT email.
+    </p>
+
+</div>
+
+
+<form class="searchbar" method="get">
+
+    <input
+        name="q"
+        value="{{ q }}"
+        placeholder="Search students..."
+    >
+
+    <button class="btn">
+        Search
+    </button>
+
+</form>
+
+
+{% if q %}
+
+    <div class="panel">
+
+        {% for person in results %}
+
+            <div class="member-row">
+
+                <div class="avatar">
+                    {{ person.name[:1]|upper }}
+                </div>
+
+                <div class="member-name">
+
+                    <b>{{ person.name }}</b>
+
+                    <small>{{ person.email }}</small>
+
+                </div>
+
+            </div>
+
+        {% else %}
+
+            <p class="muted">
+                No students found.
+            </p>
+
+        {% endfor %}
+
+    </div>
+
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="auth-wrap">
+
+    <form class="panel auth" method="post">
+
+        <p class="eyebrow">JIITGO ACCOUNT</p>
+
+        <h1>
+            {{ 'Create account' if mode == 'register'
+               else 'Welcome back' }}
+        </h1>
+
+
+        {% if mode == 'register' %}
+
+            <label>
+                Full name
+
+                <input
+                    name="name"
+                    required
+                    placeholder="Your name"
+                >
+            </label>
+
+        {% endif %}
+
+
+        <label>
+            JIIT email
+
+            <input
+                type="email"
+                name="email"
+                required
+                placeholder="name@mail.jiit.ac.in"
+            >
+        </label>
+
+
+        <label>
+            Password
+
+            <input
+                type="password"
+                name="password"
+                minlength="6"
+                required
+                placeholder="At least 6 characters"
+            >
+        </label>
+
+
+        <button class="btn full" type="submit">
+
+            {{ 'Sign up' if mode == 'register' else 'Login' }}
+
+        </button>
+
+
+        <p class="muted center">
+
+            {% if mode == 'register' %}
+
+                Already registered?
+
+                <a href="{{ url_for('login') }}">
+                    Login
+                </a>
+
+            {% else %}
+
+                New here?
+
+                <a href="{{ url_for('register') }}">
+                    Create account
+                </a>
+
+            {% endif %}
+
+        </p>
+
+
+        <p class="tiny">
+            Prototype: email OTP verification is currently disabled.
+        </p>
+
+    </form>
+
+</div>
+
+{% endblock %}
